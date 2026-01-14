@@ -1,46 +1,47 @@
-package com.catalog.entities;
+package com.catalog.dto;
 
-import jakarta.persistence.*;
+import com.catalog.entities.Category;
+import com.catalog.entities.Product;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
-@Entity
-@Table(name = "tb_product")
-public class Product {
+public class ProductDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
-    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant date;
-
-    @Column(columnDefinition = "TEXT")
     private String description;
-
     private Double price;
     private String imgUrl;
 
-    @ManyToMany
-    @JoinTable(name = "tb_product_category",
-        joinColumns = @JoinColumn(name = "product_id"),
-        inverseJoinColumns = @JoinColumn(name = "category_id"))
-    Set<Category> categories = new HashSet<>();
+    private List<CategoryDTO> categories = new ArrayList<>();
 
-    public Product() {}
+    public ProductDTO() {
+    }
 
-    public Product(Long id, String name, Instant date, String description, Double price, String imgUrl) {
+    public ProductDTO(Long id, String name, Instant date, String description, Double price, String imgUrl) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.description = description;
         this.price = price;
         this.imgUrl = imgUrl;
+    }
+    public ProductDTO(Product entity) {
+        id = entity.getId();
+        name = entity.getName();
+        date = entity.getDate();
+        description = entity.getDescription();
+        price = entity.getPrice();
+        imgUrl = entity.getImgUrl();
+    }
+
+    public ProductDTO(Product entity, Set<Category> categories) {
+        this(entity);
+        categories.forEach(cat -> this.categories.add(new CategoryDTO(cat)));
     }
 
     public Long getId() {
@@ -91,19 +92,11 @@ public class Product {
         this.imgUrl = imgUrl;
     }
 
-    public Set<Category> getCategories() {
+    public List<CategoryDTO> getCategories() {
         return categories;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-        return Objects.equals(id, product.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
+    public void setCategories(List<CategoryDTO> categories) {
+        this.categories = categories;
     }
 }
