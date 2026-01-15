@@ -47,7 +47,12 @@ public class ProductService {
         return new ProductDTO(entity, entity.getCategories());
     }
 
-    @jakarta.transaction.Transactional
+    @Transactional(readOnly = true)
+    public Long count() {
+        return productRepository.count();
+    }
+
+    @Transactional
     public ProductDTO insert(ProductDTO dto) {
         logger.info("Inserting a product: {}", dto.getName());
         Product entity = new Product();
@@ -56,7 +61,7 @@ public class ProductService {
         return new ProductDTO(entity);
     }
 
-    @jakarta.transaction.Transactional
+    @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
         logger.info("Updating a product: {} by id: {}", dto.getName(), id);
         try {

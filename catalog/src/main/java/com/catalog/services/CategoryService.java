@@ -30,7 +30,7 @@ public class CategoryService {
     public Page<CategoryDTO> findAllPaged(Pageable pageable) {
         logger.info("Finding all categories");
         Page<Category> list = categoryRepository.findAll(pageable);
-        return list.map(x -> new CategoryDTO(x));
+        return list.map(CategoryDTO::new);
     }
 
     @Transactional(readOnly = true)

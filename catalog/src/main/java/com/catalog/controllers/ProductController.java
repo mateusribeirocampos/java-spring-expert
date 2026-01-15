@@ -37,6 +37,12 @@ public class ProductController {
         return ResponseEntity.ok().body(dto);
     }
 
+    @GetMapping(value = "/count")
+    public ResponseEntity<Long> count() {
+        Long total = productService.count();
+        return ResponseEntity.ok(total);
+    }
+
     @PostMapping
     public ResponseEntity<ProductDTO> insert(@RequestBody ProductDTO dto) {
         logger.info("POST /products - inserting the product: {}", dto.getName());
