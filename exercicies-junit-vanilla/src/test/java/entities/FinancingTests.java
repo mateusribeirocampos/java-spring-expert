@@ -5,7 +5,6 @@ import org.example.entities.Financing;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
 
 public class FinancingTests {
 
@@ -102,5 +101,56 @@ public class FinancingTests {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             fin5.setIncome(updateIncome);
         });
+    }
+
+    // SetMonths
+    @Test
+    public void updateShouldMonthsWhenValidData() {
+        Integer updatedMonths = 100;
+
+        Financing fin6 = FinancingFactory.createDefaultValidFinancing();
+        fin6.setMonths(updatedMonths);
+
+        Assertions.assertEquals(updatedMonths, fin6.getMonths());
+
+    }
+
+    @Test
+    public void exceptionShouldMonthWhenInvalidData() {
+        Integer updatedMonths = 30;
+
+        Financing fin7 = FinancingFactory.createDefaultValidFinancing();
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+           fin7.setMonths(updatedMonths);
+        });
+    }
+
+    // entry()
+    @Test
+    public void entryShouldReturn20PercentOfTotalAmount() {
+        // Arrange
+        Financing fin = FinancingFactory.createDefaultValidFinancing();
+        double expectedEntry = 20000.0; // 100000 * 0.2 = 20000
+
+        // Act
+        double actualEntry = fin.entry();
+
+        // Assert
+        Assertions.assertEquals(expectedEntry, actualEntry);
+    }
+
+    // quota()
+    @Test
+    public void quotaShouldReturnCorrectMonthlyPayment() {
+        // Arrange
+        Financing fin = FinancingFactory.createDefaultValidFinancing();
+        double expectedQuota = 1000.0; // (100000 - 20000) / 80 = 1000
+
+        // Act
+        double actualQuota = fin.quota();
+
+        // Assert
+        Assertions.assertEquals(expectedQuota, actualQuota);
     }
 }
