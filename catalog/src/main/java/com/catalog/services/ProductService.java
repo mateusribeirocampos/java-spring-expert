@@ -36,7 +36,7 @@ public class ProductService {
     public Page<ProductDTO> findAll(Pageable pageable) {
         logger.info("Finding all products");
         Page<Product> entityList = productRepository.findAll(pageable);
-        return entityList.map(ProductDTO::new);
+        return entityList.map(x -> new ProductDTO(x));
     }
 
     @Transactional(readOnly = true)
