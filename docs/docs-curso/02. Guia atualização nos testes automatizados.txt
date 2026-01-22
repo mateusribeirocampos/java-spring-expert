@@ -1,0 +1,33 @@
+﻿Guia de atualização nos testes
+
+/repositories/ProductRepositoryTests.java
+1. Remover teste para id inexistente:
+@Test
+public void deleteShouldThrowEmptyResultDataAccessExceptionWhenIdDoesNotExist() {
+
+	Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
+		repository.deleteById(nonExistingId);			
+	});
+}
+
+/services/ProductServiceTests.java
+1. Incluir mocks para existsById:
+Mockito.when(repository.existsById(existingId)).thenReturn(true);
+Mockito.when(repository.existsById(nonExistingId)).thenReturn(false);
+Mockito.when(repository.existsById(dependentId)).thenReturn(true);
+
+2. Remover mock da EmptyResultDataAccessException:
+Mockito.doThrow(EmptyResultDataAccessException.class)
+.when(repository).deleteById(nonExistingId);
+
+3. Remover verify do teste de delete para id não existente:
+@Test
+public void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+
+	Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+		service.delete(nonExistingId);
+	});
+
+	Mockito.verify(repository, times(1)).deleteById(nonExistingId);
+}
+

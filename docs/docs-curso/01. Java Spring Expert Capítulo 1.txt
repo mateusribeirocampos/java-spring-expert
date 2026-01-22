@@ -1,0 +1,57 @@
+﻿Java Spring Expert Capítulo 1
+CRUD
+Competências
+    • Criar projeto Spring Boot
+    • Criar monorepo Git
+    • Organizar o projeto em camadas
+        ◦ Controlador REST
+        ◦ Serviço
+        ◦ Acesso a dados (Repository)
+    • Criar entidades
+    • Configurar perfil de teste do projeto
+    • Seeding da base de dados
+    • Criar web services REST
+        ◦ Parâmetros de rota @PathVariable
+        ◦ Parâmetros de requisição @RequestParam
+        ◦ Corpo de requisição @RequestBody
+        ◦ Resposta da requisição ResponseEntity<T>
+    • Padrão DTO
+    • CRUD completo
+    • Tratamento de exceções
+    • Postman (coleções, ambientes)
+    • Dados de auditoria
+    • Paginação de dados
+    • Associações entre entidades (N-N)
+
+Código do arquivo pom.xml 
+https://gist.github.com/acenelio/56e6f96a1e8fdb17d46f8b41b4c757fc
+
+Plugin do Maven
+
+
+<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-resources-plugin</artifactId>
+	<version>3.1.0</version> <!--$NO-MVN-MAN-VER$ -->
+</plugin>
+
+
+
+Vídeos auxiliares
+Conceitos sobre desenvolvimento web e REST
+https://www.youtube.com/watch?v=b8uLFfzcVQ8
+
+Análise do app da Semana DevSuperior 1.0
+https://www.youtube.com/watch?v=PfYifUFmXk8
+
+Introdução a JPA e Hibernate
+https://www.youtube.com/watch?v=CAP1IPgeJkw
+
+Github dos recursos para o DSCatalog
+https://github.com/devsuperior/dscatalog-resources
+Figma do DSCatalog
+https://www.figma.com/file/cNa2l3TqZXxbU6NBDPruNw/BDS-DSCatalog
+Modelo conceitual do DSCatalog
+
+
+
