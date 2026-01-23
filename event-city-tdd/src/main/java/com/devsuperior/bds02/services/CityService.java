@@ -21,4 +21,15 @@ public class CityService {
         return listEntity.stream().map(x -> new CityDTO(x)).collect(Collectors.toList());
     }
 
+    public CityDTO insert(CityDTO dto) {
+        City entity = new City();
+        entity.setName(dto.getName());
+        entity = repository.save(entity);
+        return new CityDTO(entity);
+    }
+
+    public void delete(Long id) {
+        
+    }
+
 }
