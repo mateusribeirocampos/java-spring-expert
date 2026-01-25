@@ -3,6 +3,7 @@ package com.catalog.controllers;
 import com.catalog.dto.UserDTO;
 import com.catalog.dto.UserInsertDTO;
 import com.catalog.services.UserService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> insert(@RequestBody UserInsertDTO dto) {
+    public ResponseEntity<UserDTO> insert(@Valid @RequestBody UserInsertDTO dto) {
         logger.info("POST /users - inserting the user: {}", dto.getFirstName());
         UserDTO newDto = userService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -53,7 +54,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UserDTO> update(@PathVariable Long id, @RequestBody UserDTO dto) {
+    public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserDTO dto) {
         logger.info("PUT /users - updating the user: {} with id: {}",dto.getFirstName(), id);
         dto = userService.update(id, dto);
         return ResponseEntity.ok().body(dto);

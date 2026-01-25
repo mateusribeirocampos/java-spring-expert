@@ -1,10 +1,13 @@
 package com.catalog.dto;
 
 import com.catalog.entities.Category;
+import jakarta.validation.constraints.NotBlank;
 
 public class CategoryDTO {
 
     private Long id;
+
+    @NotBlank(message = "This field is required")
     private String name;
 
     public CategoryDTO() {

@@ -2,6 +2,8 @@ package com.catalog.dto;
 
 import com.catalog.entities.Category;
 import com.catalog.entities.Product;
+import jakarta.validation.constraints.*;
+import org.hibernate.validator.constraints.URL;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -11,10 +13,24 @@ import java.util.Set;
 public class ProductDTO {
 
     private Long id;
+
+    @Size(min = 5, max = 60, message = "Product must be between 5 and 60 characters")
+    @NotBlank(message = "This field is required")
     private String name;
+
+    @PastOrPresent(message = "Product date must not be future")
     private Instant date;
+
+    @NotBlank(message = "This field is required")
     private String description;
+
+    @Positive(message = "Price must be positive")
+    @NotNull(message = "This field is required")
     private Double price;
+
+    @NotBlank(message = "URL of image must not be empty")
+    @URL(message = "Invalid URL")
+    @Pattern(regexp = "^https://.*", message = "URL must be use HTTPS")
     private String imgUrl;
 
     private List<CategoryDTO> categories = new ArrayList<>();
