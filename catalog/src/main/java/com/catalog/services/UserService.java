@@ -1,9 +1,6 @@
 package com.catalog.services;
 
-import com.catalog.dto.CategoryDTO;
-import com.catalog.dto.RoleDTO;
-import com.catalog.dto.UserDTO;
-import com.catalog.dto.UserInsertDTO;
+import com.catalog.dto.*;
 import com.catalog.entities.Category;
 import com.catalog.entities.Role;
 import com.catalog.entities.User;
@@ -71,7 +68,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO update(Long id, UserDTO dto) {
+    public UserDTO update(Long id, UserUpdateDTO dto) {
         logger.info("Updating a user: {} by id: {}", dto.getFirstName(), id);
         try {
             User entity = userRepository.getReferenceById(id);

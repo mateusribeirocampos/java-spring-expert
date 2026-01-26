@@ -2,6 +2,7 @@ package com.catalog.controllers;
 
 import com.catalog.dto.UserDTO;
 import com.catalog.dto.UserInsertDTO;
+import com.catalog.dto.UserUpdateDTO;
 import com.catalog.services.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -54,10 +55,10 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserDTO dto) {
+    public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO dto) {
         logger.info("PUT /users - updating the user: {} with id: {}",dto.getFirstName(), id);
-        dto = userService.update(id, dto);
-        return ResponseEntity.ok().body(dto);
+        UserDTO newDto = userService.update(id, dto);
+        return ResponseEntity.ok().body(newDto);
     }
 
     @DeleteMapping(value = "/{id}")
