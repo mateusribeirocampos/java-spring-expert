@@ -3,6 +3,7 @@ package com.catalog.services;
 import com.catalog.dto.*;
 import com.catalog.entities.Role;
 import com.catalog.entities.User;
+import com.catalog.projections.UserDetailsProjection;
 import com.catalog.repositories.RoleRepository;
 import com.catalog.repositories.UserRepository;
 import com.catalog.services.exceptions.DatabaseException;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,8 +42,17 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        return null;
+        List<UserDetailsProjection> result = userRepository.searchUserAndRoleByEmail(username);
+        if (result.isEmpty()) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        User user = new User();
+        user.setEmail(username);
+        user.setPassword(result.get(0).getPassword());
+        for (UserDetailsProjection projection : result) {
+            user.addRole(new Role(projection.getRoleId(), projection.getAuthority()));
+        }
+        return user;
     }
 
     @Transactional(readOnly = true)
