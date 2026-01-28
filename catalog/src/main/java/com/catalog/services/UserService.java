@@ -1,10 +1,8 @@
 package com.catalog.services;
 
 import com.catalog.dto.*;
-import com.catalog.entities.Category;
 import com.catalog.entities.Role;
 import com.catalog.entities.User;
-import com.catalog.repositories.CategoryRepository;
 import com.catalog.repositories.RoleRepository;
 import com.catalog.repositories.UserRepository;
 import com.catalog.services.exceptions.DatabaseException;
@@ -16,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -36,6 +37,12 @@ public class UserService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        return null;
+    }
 
     @Transactional(readOnly = true)
     public Page<UserDTO> findAll(Pageable pageable) {
