@@ -15,6 +15,9 @@ public class ProductService {
 
 	@Autowired
 	private ProductRepository productRepository;
+
+	@Autowired
+	private AuthService authService;
 	
 	@Transactional(readOnly = true)
 	public ProductDTO findById(Long id) {
@@ -29,6 +32,10 @@ public class ProductService {
 
 	@Transactional
 	public ProductDTO insert(ProductDTO dto) {
+		// Validação MANUAL: Verifica se o usuário autenticado é ADMIN
+		// Esta é a ABORDAGEM MANUAL (gambiarra) - funciona mas não é recomendada para produção
+		authService.validateAdmin();
+
 		Product entity = new Product();
 		entity.setName(dto.getName());
 		entity = productRepository.save(entity);
