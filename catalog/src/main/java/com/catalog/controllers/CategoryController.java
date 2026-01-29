@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -38,6 +39,7 @@ public class CategoryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CategoryDTO> insert(@Valid @RequestBody CategoryDTO dto) {
         logger.info("POST /categories - inserting the category: {}", dto.getName());
         dto = categoryService.insert(dto);
@@ -47,6 +49,7 @@ public class CategoryController {
     }
 
     @PutMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @Valid @RequestBody CategoryDTO dto) {
         logger.info("PUT /categories - updating the category: {} with id: {}",dto.getName(), id);
         dto = categoryService.update(id, dto);
@@ -54,6 +57,7 @@ public class CategoryController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         logger.info("DELETE /categories/{} - deleting a categories by id", id);
         categoryService.delete(id);
