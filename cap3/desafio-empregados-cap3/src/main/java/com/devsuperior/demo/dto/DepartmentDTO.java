@@ -1,10 +1,15 @@
 package com.devsuperior.demo.dto;
 
 import com.devsuperior.demo.entities.Department;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class DepartmentDTO {
-	
+
 	public Long id;
+
+	@Size(min = 3, max = 60, message = "Categories must be between 3 and 60 characters")
+	@NotBlank(message = "This field is required")
 	public String name;
 	
 	public DepartmentDTO() {

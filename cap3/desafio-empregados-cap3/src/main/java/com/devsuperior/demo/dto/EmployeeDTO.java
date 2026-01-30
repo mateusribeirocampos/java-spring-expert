@@ -1,12 +1,22 @@
 package com.devsuperior.demo.dto;
 
 import com.devsuperior.demo.entities.Employee;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class EmployeeDTO {
 	
 	private Long id;
+
+	@Size(min = 3, max = 80, message = "Employee must be between 3 and 80 characters")
+	@NotBlank(message = "This field is required")
 	private String name;
+
+	@Email(message = "Please, insert a valid email")
+	@NotBlank(message = "Required field")
 	private String email;
+
 	private Long departmentId;
 	
 	public EmployeeDTO() {
