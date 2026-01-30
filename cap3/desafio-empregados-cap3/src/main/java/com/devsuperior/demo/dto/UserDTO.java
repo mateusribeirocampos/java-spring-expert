@@ -1,6 +1,7 @@
 package com.devsuperior.demo.dto;
 
 import com.devsuperior.demo.entities.User;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -13,14 +14,14 @@ public class UserDTO {
 
     private Long id;
 
-    @NotBlank(message = "Required field")
+    @NotBlank(message = "Campo requerido")
     private String firstName;
 
-    @NotBlank(message = "Required field")
+    @NotBlank(message = "Campo requerido")
     private String lastName;
 
-    @Email(message = "Please, insert a valid email")
-    @NotBlank(message = "Required field")
+    @Email(message = "Email inválido")
+    @NotBlank(message = "Campo requerido")
     private String email;
 
     Set<RoleDTO> roles = new HashSet<>();

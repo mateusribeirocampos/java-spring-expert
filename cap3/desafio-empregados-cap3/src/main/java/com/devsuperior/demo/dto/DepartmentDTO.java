@@ -8,8 +8,7 @@ public class DepartmentDTO {
 
 	public Long id;
 
-	@Size(min = 3, max = 60, message = "Categories must be between 3 and 60 characters")
-	@NotBlank(message = "This field is required")
+	@NotBlank(message = "Campo requerido")
 	public String name;
 	
 	public DepartmentDTO() {

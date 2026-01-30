@@ -3,20 +3,20 @@ package com.devsuperior.demo.dto;
 import com.devsuperior.demo.entities.Employee;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
 
 public class EmployeeDTO {
 	
 	private Long id;
 
-	@Size(min = 3, max = 80, message = "Employee must be between 3 and 80 characters")
-	@NotBlank(message = "This field is required")
+	@NotBlank(message = "Campo requerido")
 	private String name;
 
-	@Email(message = "Please, insert a valid email")
-	@NotBlank(message = "Required field")
+	@Email(message = "Email inválido")
+	@NotBlank(message = "Campo requerido")
 	private String email;
 
+	@NotNull(message = "Campo requerido")
 	private Long departmentId;
 	
 	public EmployeeDTO() {
