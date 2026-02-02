@@ -33,6 +33,5 @@ public class EventController {
                 .buildAndExpand(dto.getId())
                 .toUri();
         return ResponseEntity.created(uri).body(dto);
-
     }
 }
