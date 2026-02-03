@@ -25,7 +25,6 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         List<UserDetailsProjection> result = repository.searchUserAndRoleByEmail(username);
-        System.out.println("RESULT of LISt OF UserDetailsProjection" + result);
         if (result.isEmpty()) {
             throw new UsernameNotFoundException("User not found");
         }
