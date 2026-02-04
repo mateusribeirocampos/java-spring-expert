@@ -3,7 +3,6 @@ package com.devsuperior.dscatalog.services;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.devsuperior.dscatalog.projections.ProductProjection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +45,17 @@ public class ProductService {
 	public Page<ProductDTO> findAllPaged(String name, String categoryId, Pageable pageable) {
 //		String[] vet = categoryId.split(",");
 //		List<String> list = Arrays.asList(vet);
-		List<Long> categoryIds = Arrays.asList();
+		//List<Long> categoryIds = Arrays.asList();
+		List<Long> categoryIds = List.of();
 		if (!"0".equals(categoryId)) {
-			categoryIds = Arrays.asList(categoryId.split(",")).stream().map(Long::parseLong).toList();
+
+			// categoryIds = Arrays.asList(categoryId.split(",")).stream().map(x -> Long.parseLong(x)).toList();
+			categoryIds = Arrays.stream(categoryId.split(",")).map(Long::parseLong).toList();
+
 		}
 		Page<ProductProjection> page = repository.searchProducts(categoryIds, name, pageable);
-		List<Long> productIds = page.map(x -> x.getId()).toList();
+		// List<Long> productIds = page.map(x -> x.getId()).toList();
+		List<Long> productIds = page.map(ProductProjection::getId).toList();
 
 		List<Product> entities = repository.searchProductsWithCategories(productIds);
 		List<ProductDTO> dtos = entities.stream().map(p -> new ProductDTO(p, p.getCategories())).toList();
@@ -63,7 +67,7 @@ public class ProductService {
 
 	@Transactional(readOnly = true)
 	public ProductDTO findById(Long id) {
-		Optional<Product> obj = repository.findById(id);
+		Optional<Product> obj = repository.findByIdWithCategories(id);
 		Product entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
 		return new ProductDTO(entity, entity.getCategories());
 	}
