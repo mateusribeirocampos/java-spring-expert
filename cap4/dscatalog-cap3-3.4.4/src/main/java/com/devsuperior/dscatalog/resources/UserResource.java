@@ -44,6 +44,13 @@ public class UserResource {
 		UserDTO dto = service.findById(id);
 		return ResponseEntity.ok().body(dto);
 	}
+
+	@PreAuthorize("hasAnyRole('ROLE_OPERATOR','ROLE_ADMIN')")
+	@GetMapping(value = "/profile")
+	public ResponseEntity<UserDTO> findMe() {
+		UserDTO dto = service.userMe();
+		return ResponseEntity.ok().body(dto);
+	}
 	
 	// @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 	@PostMapping
