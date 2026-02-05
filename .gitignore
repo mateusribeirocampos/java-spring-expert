@@ -35,3 +35,7 @@ build/
 # private docs
 /docs/*
 .env
+
+# PostgreSQL data directory (Docker volumes or local database)
+.data/
+**/data/postgresql/
