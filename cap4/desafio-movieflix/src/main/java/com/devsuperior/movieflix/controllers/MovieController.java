@@ -2,6 +2,7 @@ package com.devsuperior.movieflix.controllers;
 
 import com.devsuperior.movieflix.dto.MovieCardDTO;
 import com.devsuperior.movieflix.dto.MovieDetailsDTO;
+import com.devsuperior.movieflix.dto.ReviewDTO;
 import com.devsuperior.movieflix.services.MovieService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +12,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/movies")
 public class MovieController {
 
     @Autowired
     private MovieService movieService;
+
+    @GetMapping(value = "/{id}/reviews")
+    @PreAuthorize("hasAnyRole('VISITOR','MEMBER')")
+    public ResponseEntity<List<ReviewDTO>> findByMovieId(@Valid @PathVariable Long id) {
+        List<ReviewDTO> reviewDTOS = movieService.findByMovieId(id);
+        return ResponseEntity.ok().body(reviewDTOS);
+    }
 
     @GetMapping(value = "/{id}")
     @PreAuthorize("hasAnyRole('VISITOR','MEMBER')")

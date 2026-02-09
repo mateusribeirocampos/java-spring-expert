@@ -2,6 +2,8 @@ package com.devsuperior.movieflix.dto;
 
 import com.devsuperior.movieflix.entities.Movie;
 
+import java.util.List;
+
 public class MovieDetailsDTO {
 
     private Long id;
