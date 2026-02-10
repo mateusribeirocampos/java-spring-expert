@@ -5,6 +5,7 @@ import com.devsuperior.dscommerce.projections.UserDetailsProjection;
 import com.devsuperior.dscommerce.repositories.UserRepository;
 import com.devsuperior.dscommerce.tests.UserDetailsFactory;
 import com.devsuperior.dscommerce.tests.UserFactory;
+import com.devsuperior.dscommerce.util.CustomUserUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 public class UserServiceTests {
@@ -27,6 +29,9 @@ public class UserServiceTests {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private CustomUserUtil customUserUtil;
 
     private User user;
     private String existingUsername, nonExistingUsername;
@@ -43,6 +48,9 @@ public class UserServiceTests {
 
         Mockito.when(userRepository.searchUserAndRolesByEmail(existingUsername)).thenReturn(userDetailsProjections);
         Mockito.when(userRepository.searchUserAndRolesByEmail(nonExistingUsername)).thenReturn(new ArrayList<>());
+
+        Mockito.when(userRepository.findByEmail(existingUsername)).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.findByEmail(nonExistingUsername)).thenReturn(Optional.empty());
     }
 
     @Test
@@ -57,6 +65,26 @@ public class UserServiceTests {
     public void loadUserByUsernameShouldReturnThrowUserNotFoundExceptionWhenUserDoesNotExists() {
         Assertions.assertThrows(UsernameNotFoundException.class, () -> {
            userService.loadUserByUsername(nonExistingUsername);
+        });
+    }
+
+    @Test
+    public void authenticatedShouldReturnUserWhenUserExists() {
+        Mockito.when(customUserUtil.getLoggedUserName()).thenReturn(existingUsername);
+
+        User result = userService.authenticated();
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(result.getUsername(), existingUsername);
+    }
+
+    @Test
+    public void authenticatedShouldReturnThrowUsernameNotFoundExceptionWhenUserDoesNotExists() {
+
+        Mockito.doThrow(ClassCastException.class).when(customUserUtil).getLoggedUserName();
+
+        Assertions.assertThrows(UsernameNotFoundException.class, () -> {
+            userService.authenticated();
         });
     }
 }
