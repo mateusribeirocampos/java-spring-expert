@@ -6,6 +6,8 @@ import java.util.Locale;
 
 import org.hibernate.validator.constraints.URL;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.devsuperior.dsmovie.entities.MovieEntity;
 
 import jakarta.validation.constraints.NotBlank;
@@ -17,25 +19,31 @@ public class MovieDTO {
 	private static final DecimalFormat df = new DecimalFormat("#.##", new DecimalFormatSymbols(Locale.US));
 
 	private Long id;
-	
+
 	@NotBlank(message = "Required field")
 	@Size(min = 5, max = 80, message = "Title must be between 5 and 80 characters")
 	private String title;
-	
+
 	@PositiveOrZero(message = "Score should be greater than or equal to zero")
 	private Double score;
-	
+
 	@PositiveOrZero(message = "Count should be greater than or equal to zero")
 	private Integer count;
-	
+
 	@NotBlank(message = "Required field")
 	@URL(message = "Field must be a valid url")
 	private String image;
 
-	public MovieDTO(Long id, String title, Double score, Integer count, String image) {
+	@JsonCreator
+	public MovieDTO(
+			@JsonProperty("id") Long id,
+			@JsonProperty("title") String title,
+			@JsonProperty("score") Double score,
+			@JsonProperty("count") Integer count,
+			@JsonProperty("image") String image) {
 		this.id = id;
 		this.title = title;
-		this.score = Double.valueOf(df.format(score));
+		this.score = (score != null) ? Double.valueOf(df.format(score)) : null;
 		this.count = count;
 		this.image = image;
 	}
