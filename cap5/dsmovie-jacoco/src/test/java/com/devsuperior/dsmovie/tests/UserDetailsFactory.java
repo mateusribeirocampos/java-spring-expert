@@ -28,7 +28,6 @@ public class UserDetailsFactory {
 		list.add(new UserDetailsImpl(username, "123", 2L, "ROLE_ADMIN"));
 		return list;
 	}
-
 }
 
 class UserDetailsImpl implements UserDetailsProjection {

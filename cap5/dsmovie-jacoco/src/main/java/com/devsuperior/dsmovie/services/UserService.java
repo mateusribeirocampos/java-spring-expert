@@ -37,7 +37,7 @@ public class UserService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		List<UserDetailsProjection> result = repository.searchUserAndRolesByUsername(username);
-		if (result.size() == 0) {
+		if (result.isEmpty()) {
 			throw new UsernameNotFoundException("Email not found");
 		}
 		
@@ -47,7 +47,6 @@ public class UserService implements UserDetailsService {
 		for (UserDetailsProjection projection : result) {
 			user.addRole(new RoleEntity(projection.getRoleId(), projection.getAuthority()));
 		}
-		
 		return user;
 	}
 }
