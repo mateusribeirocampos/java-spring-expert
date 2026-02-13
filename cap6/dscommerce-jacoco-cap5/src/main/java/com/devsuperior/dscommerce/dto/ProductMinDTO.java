@@ -9,6 +9,9 @@ public class ProductMinDTO {
     private Double price;
     private String imgUrl;
 
+    public ProductMinDTO() {
+    }
+
     public ProductMinDTO(Long id, String name, Double price, String imgUrl) {
         this.id = id;
         this.name = name;
