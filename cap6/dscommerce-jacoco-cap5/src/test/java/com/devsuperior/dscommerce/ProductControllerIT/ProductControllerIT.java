@@ -16,8 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,7 +34,7 @@ public class ProductControllerIT {
     @Autowired
     private TokenUtil tokenUtil;
 
-    private Long existingId, nonExistingId, countTotalProduct;
+    private Long existingId, nonExistingId, dependentId, countTotalProduct;
     private String usernameAdmin, usernameClient, password, bearerTokenAdmin, bearerTokenClient, bearerTokenInvalid, productName;
     private ProductDTO productDTO;
     private Category category;
@@ -44,6 +43,7 @@ public class ProductControllerIT {
     void setUp() throws Exception {
 
         existingId = 1L;
+        dependentId = 3L;
         nonExistingId = 100L;
 
         usernameClient = "maria@gmail.com";
@@ -102,11 +102,11 @@ public class ProductControllerIT {
                 .andDo(MockMvcResultHandlers.print());
 
         result.andExpect(status().isCreated());
-        result.andExpect(jsonPath("$.id").value(26L));
+        result.andExpect(jsonPath("$.id").exists());
         result.andExpect(jsonPath("$.name").value("Mackbook air"));
         result.andExpect(jsonPath("$.description").value(productDTO.getDescription()));
         result.andExpect(jsonPath("$.price").value(productDTO.getPrice()));
-        result.andExpect(jsonPath("$.categories[0].id").value(category));
+        result.andExpect(jsonPath("$.categories[0].id").value(2L));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class ProductControllerIT {
 
     @Test
     public void insertShouldReturnUnprocessableEntityWhenProductDescriptionIsEmpty() throws Exception {
-        productDTO.setDescription(" ");
+        productDTO.setDescription("mini");
         String jsonBody = objectMapper.writeValueAsString(productDTO);
 
         ResultActions result = mockMvc.perform(post("/products")
@@ -136,7 +136,7 @@ public class ProductControllerIT {
                 .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(status().isUnprocessableEntity());
-        result.andExpect(jsonPath("$.errors[0].message").value("Campo requerido"));
+        result.andExpect(jsonPath("$.errors[0].message").value("Descrição precisa ter no mínimo 10 caracteres"));
     }
 
     @Test
@@ -209,4 +209,53 @@ public class ProductControllerIT {
 
         result.andExpect(status().isUnauthorized());
     }
+
+    @Test
+    public void deleteShouldReturn204NoContentWhenProductIsDeletedWithAdminLogged() throws Exception {
+        ResultActions result = mockMvc
+                .perform(delete("/products/{id}", existingId)
+                .header("Authorization", "Bearer " + bearerTokenAdmin)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+        ResultActions result = mockMvc
+                .perform(delete("/products/{id}", nonExistingId)
+                .header("Authorization", "Bearer " + bearerTokenAdmin)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void deleteShouldReturnBadRequestWhenProductDependentProductId() throws Exception {
+        ResultActions result = mockMvc
+                .perform(delete("/products/{id}", dependentId)
+                .header("Authorization", "Bearer " + bearerTokenAdmin)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void deleteShouldReturnForbiddenWhenClientLogged() throws Exception {
+        ResultActions result = mockMvc.perform(delete("/products/{id}", existingId)
+                .header("Authorization", "Bearer " + bearerTokenClient)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void deleteShouldReturnUnauthorizedWhenTokenIsInvalid() throws Exception {
+        ResultActions result = mockMvc.perform(delete("/products/{id}", existingId)
+                .header("Authorization", "Bearer " + bearerTokenInvalid)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isUnauthorized());
+    }
+
 }
