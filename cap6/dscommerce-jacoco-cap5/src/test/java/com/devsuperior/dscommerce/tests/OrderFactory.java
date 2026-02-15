@@ -2,6 +2,7 @@ package com.devsuperior.dscommerce.tests;
 
 import java.time.Instant;
 
+import com.devsuperior.dscommerce.dto.OrderDTO;
 import com.devsuperior.dscommerce.entities.Order;
 import com.devsuperior.dscommerce.entities.OrderItem;
 import com.devsuperior.dscommerce.entities.OrderStatus;

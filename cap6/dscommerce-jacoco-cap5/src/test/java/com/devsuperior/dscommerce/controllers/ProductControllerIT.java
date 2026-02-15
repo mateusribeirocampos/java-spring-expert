@@ -1,4 +1,4 @@
-package com.devsuperior.dscommerce.ProductControllerIT;
+package com.devsuperior.dscommerce.controllers;
 
 import com.devsuperior.dscommerce.dto.ProductDTO;
 import com.devsuperior.dscommerce.entities.Category;
@@ -257,5 +257,4 @@ public class ProductControllerIT {
 
         result.andExpect(status().isUnauthorized());
     }
-
 }
