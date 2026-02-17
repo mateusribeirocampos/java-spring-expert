@@ -479,6 +479,15 @@ RestAssured sends real HTTP requests. `@Transactional` at the test class only wr
 
 ---
 
+## Reference Gists
+
+| Gist | Files | Description |
+|------|:-----:|-------------|
+| [OAuth2 Custom Password Grant](https://gist.github.com/mateusribeirocampos/3b000e18c10ab1f2de4a5570c62abd16) | 6 | `AuthorizationServerConfig` · `ResourceServerConfig` · Custom Grant package (`Converter`, `Token`, `UserAuthorities`, `Provider`) |
+| [TokenUtil](https://gist.github.com/mateusribeirocampos/5bf4796251966ae285fb4c6a04d66d1b) | 2 | JWT acquisition for integration tests — MockMvc (`@Component` + `@Value`) and RestAssured (static) variants |
+
+---
+
 ## Skills Demonstrated
 
 - **Architecture:** Clean layered REST API design with Spring Boot 3
