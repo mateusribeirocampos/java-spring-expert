@@ -22,7 +22,6 @@ public class MovieControllerRA {
 	private String clientUsername, adminUsername, clientPassword, adminPassword;
 
 	private Map<String, Object> postMovieInstance;
-//	private Map<String, Object> putMovieInstance;
 
 	@BeforeEach
 	void setUp() throws JSONException {
