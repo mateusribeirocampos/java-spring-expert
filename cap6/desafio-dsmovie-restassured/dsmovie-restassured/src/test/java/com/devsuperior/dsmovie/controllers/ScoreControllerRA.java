@@ -18,7 +18,7 @@ public class ScoreControllerRA {
 
 	private Long existingMovieId, nonExistingMovieId;
 	private Double score;
-	private String adminToken, clientToken, invalidToken;
+	private String adminToken;
 	private String clientUsername, adminUsername, clientPassword, adminPassword;
 
 	private Map<String, Object> putMovieInstance;
@@ -32,9 +32,7 @@ public class ScoreControllerRA {
 		adminUsername = "maria@gmail.com";
 		adminPassword = "123456";
 
-		clientToken = TokenUtil.obtainAccessToken(clientUsername, clientPassword);
 		adminToken = TokenUtil.obtainAccessToken(adminUsername, adminPassword);
-		invalidToken = adminToken + "ztak";
 
 		existingMovieId = 1L;
 		nonExistingMovieId = 100L;
