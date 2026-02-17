@@ -111,7 +111,7 @@ public class MovieControllerRA {
 				.then()
 				.statusCode(422)
 				.body("error", equalTo("Dados inválidos"))
-				.body("errors.message[0]", equalTo("Tamanho deve ser entre 5 e 80 caracteres"));
+				.body("errors.message", hasItems("Campo requerido"));
 	}
 	
 	@Test

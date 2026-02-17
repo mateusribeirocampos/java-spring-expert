@@ -19,7 +19,7 @@ public class ScoreControllerRA {
 	private Long existingMovieId, nonExistingMovieId;
 	private Double score;
 	private String adminToken;
-	private String clientUsername, adminUsername, clientPassword, adminPassword;
+	private String adminUsername, adminPassword;
 
 	private Map<String, Object> putMovieInstance;
 
@@ -27,8 +27,6 @@ public class ScoreControllerRA {
 	void setUp() throws JSONException {
 		baseURI = "http://localhost:8080";
 
-		clientUsername = "alex@gmail.com";
-		clientPassword = "123456";
 		adminUsername = "maria@gmail.com";
 		adminPassword = "123456";
 
@@ -63,7 +61,7 @@ public class ScoreControllerRA {
 	
 	@Test
 	public void saveScoreShouldReturnUnprocessableEntityWhenMissingMovieId() throws Exception {
-		putMovieInstance.put("movieId", " ");
+		putMovieInstance.put("movieId", null);
 		JSONObject saveScore = new JSONObject(putMovieInstance);
 
 		given()
