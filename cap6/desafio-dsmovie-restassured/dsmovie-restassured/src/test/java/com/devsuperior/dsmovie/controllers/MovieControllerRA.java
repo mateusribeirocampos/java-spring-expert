@@ -1,9 +1,14 @@
 package com.devsuperior.dsmovie.controllers;
 
+import com.devsuperior.dsmovie.tests.TokenUtil;
+import io.restassured.http.ContentType;
 import org.json.JSONException;
-import org.junit.Before;
+import org.json.simple.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
@@ -13,12 +18,32 @@ public class MovieControllerRA {
 
 	private String movieTitle;
 	private Long existingId, nonExistingId;
+	private String adminToken, clientToken, invalidToken;
+	private String clientUsername, adminUsername, clientPassword, adminPassword;
+
+	private Map<String, Object> postMovieInstance;
+//	private Map<String, Object> putMovieInstance;
 
 	@BeforeEach
 	void setUp() throws JSONException {
 		baseURI = "http://localhost:8080";
 
+		clientUsername = "alex@gmail.com";
+		clientPassword = "123456";
+		adminUsername = "maria@gmail.com";
+		adminPassword = "123456";
+
+		clientToken = TokenUtil.obtainAccessToken(clientUsername, clientPassword);
+		adminToken = TokenUtil.obtainAccessToken(adminUsername, adminPassword);
+		invalidToken = adminToken + "ztak";
+
 		movieTitle = "Matrix";
+
+		postMovieInstance = new HashMap<>();
+		postMovieInstance.put("title", "Matrix Revolutions");
+		postMovieInstance.put("score", 3.5);
+		postMovieInstance.put("count", 0);
+		postMovieInstance.put("image", "https://media.fstatic.com/l-dFvprp4Xmyz8cpSKaIhoXSvd4=/220x330/smart/filters:format(webp)/media/movies/covers/2013/10/matrix-revolutions_t661_1.jpg");
 
 	}
 	
@@ -61,18 +86,64 @@ public class MovieControllerRA {
 	}
 	
 	@Test
-	public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() {	
+	public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() {
+		nonExistingId = 100L;
+
+		given()
+				.get("/movies/{id}", nonExistingId)
+				.then()
+				.statusCode(404)
+				.body("error", equalTo("Recurso não encontrado"));
 	}
 	
 	@Test
-	public void insertShouldReturnUnprocessableEntityWhenAdminLoggedAndBlankTitle() throws JSONException {		
+	public void insertShouldReturnUnprocessableEntityWhenAdminLoggedAndBlankTitle() throws JSONException {
+		postMovieInstance.put("title", "  ");
+		JSONObject newMovie = new JSONObject(postMovieInstance);
+
+		given()
+				.header("content-type", "application/json")
+				.header("Authorization", "Bearer " + adminToken)
+				.body(newMovie)
+				.contentType(ContentType.JSON)
+				.accept(ContentType.JSON)
+				.when()
+				.post("/movies")
+				.then()
+				.statusCode(422)
+				.body("error", equalTo("Dados inválidos"))
+				.body("errors.message[0]", equalTo("Tamanho deve ser entre 5 e 80 caracteres"));
 	}
 	
 	@Test
 	public void insertShouldReturnForbiddenWhenClientLogged() throws Exception {
+		JSONObject newMovie = new JSONObject(postMovieInstance);
+
+		given()
+				.header("content-type", "application/json")
+				.header("Authorization", "Bearer " + clientToken)
+				.body(newMovie)
+				.contentType(ContentType.JSON)
+				.accept(ContentType.JSON)
+				.when()
+				.post("/movies")
+				.then()
+				.statusCode(403);
 	}
 	
 	@Test
 	public void insertShouldReturnUnauthorizedWhenInvalidToken() throws Exception {
+		JSONObject newMovie = new JSONObject(postMovieInstance);
+
+		given()
+				.header("content-type", "application/json")
+				.header("Authorization", "Bearer " + invalidToken)
+				.body(newMovie)
+				.contentType(ContentType.JSON)
+				.accept(ContentType.JSON)
+				.when()
+				.post("/movies")
+				.then()
+				.statusCode(401);
 	}
 }
