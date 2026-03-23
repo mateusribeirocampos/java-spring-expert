@@ -39,3 +39,7 @@ build/
 # PostgreSQL data directory (Docker volumes or local database)
 .data/
 **/data/postgresql/
+
+# IA
+SKILL.md
+CLAUDE.md
